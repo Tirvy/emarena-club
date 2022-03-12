@@ -73,12 +73,10 @@ export default class Visiters extends React.Component {
 
   togglePopout(value) {
     if (typeof value === 'boolean') {
-      this.setState({ popout: value ? <ScreenSpinner /> : null });
-      console.log(this.state.popout, value ? <ScreenSpinner /> : null);
+      this.props.setPopout(value ? <ScreenSpinner /> : null);
     } else {
-      this.setState({ popout: !this.state.popout && <ScreenSpinner /> });
+      this.props.setPopout(!this.state.popout && <ScreenSpinner />);
     }
-    console.log(this.state.popout, typeof value);
   }
 
   render() {

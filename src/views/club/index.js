@@ -43,7 +43,8 @@ class Club extends React.Component {
       isAdmin,
       unsubscribeCallbacks,
       rerenderCancel,
-      currentEditing: null
+      currentEditing: null,
+      popout: null,
     };
   }
 
@@ -137,6 +138,12 @@ class Club extends React.Component {
     return "club";
   };
 
+  setPopout = (popout) => {
+    this.setState({
+      popout: popout
+    });
+  };
+
   render() {
     return (
       <View
@@ -149,6 +156,7 @@ class Club extends React.Component {
             visit={this.state.checkoutVisit}
           ></ModalCheckout>
         }
+        popout={this.state.popout}
       >
         <Panel id="club">
           <PanelHeader>Сейчас на аренке</PanelHeader>
@@ -161,6 +169,7 @@ class Club extends React.Component {
           visiter={this.state.currentEditing}
           visiters={this.props.visiters}
           goBack={() => this.setState({ currentEditing: null })}
+          setPopout={this.setPopout}
         ></PanelVisiterEditing>
       </View>
     );

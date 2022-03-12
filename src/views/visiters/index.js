@@ -40,7 +40,8 @@ class Visiters extends React.Component {
       newVisiterName: "",
       unsubscribeCallbacks,
       currentEditing: null,
-      snackbar: null
+      snackbar: null,
+      popout: null,
     };
   }
 
@@ -131,6 +132,12 @@ class Visiters extends React.Component {
     });
   };
 
+  setPopout = (popout) => {
+    this.setState({
+      popout: popout
+    });
+  };
+
   getCurrentPanel = () => {
     if (this.state.currentEditing) {
       return "editing";
@@ -140,7 +147,8 @@ class Visiters extends React.Component {
 
   render() {
     return (
-      <View activePanel={this.getCurrentPanel()}>
+      <View activePanel={this.getCurrentPanel()}
+        popout={this.state.popout}>
         <Panel id="visiters">
           <PanelHeader
             left={
@@ -170,6 +178,7 @@ class Visiters extends React.Component {
           visiter={this.state.currentEditing}
           visiters={this.props.visiters}
           goBack={() => this.setState({ currentEditing: null })}
+          setPopout={this.setPopout}
         ></PanelVisiterEditing>
       </View>
     );
