@@ -8,6 +8,7 @@ import {
   Input,
   Textarea,
   Group,
+  ScreenSpinner,
   platform,
   IOS
 } from "@vkontakte/vkui";
@@ -24,11 +25,13 @@ export default class Visiters extends React.Component {
     this.state = {
       id: props.visiter.id,
       name: props.visiter.name,
-      description: props.visiter.description
+      description: props.visiter.description,
+      popout: <ScreenSpinner />,
     };
   }
 
   save = () => {
+    this.togglePopout(true);
     db.collection("visiters")
       .doc(this.state.id)
       .set(
@@ -39,17 +42,48 @@ export default class Visiters extends React.Component {
         { merge: true }
       )
       .then(() => {
-        this.props.goBack();
+        const visiterIndex = this.props.visiters.findIndex(item => item.id === this.state.id);
+        const newCustomers = [...this.props.visiters];
+        newCustomers[visiterIndex] = {
+          ...newCustomers[visiterIndex],
+          name: this.state.name,
+          description: this.state.description,
+        }
+        console.log(newCustomers, visiterIndex);
+        db.collection("customers")
+          .add({
+            date: new Date(),
+            list: newCustomers
+          }).then(docRed => {
+            this.togglePopout(false);
+            this.props.goBack();
+          })
       });
   };
 
   archive = () => {
-    this.props.archive();
+    db.collection("customers")
+      .add({
+        date: new Date(),
+        list: this.props.visiters.filter(item => item.id !== this.state.id)
+      }).then(docRed => {
+        this.props.goBack();
+      })
   };
+
+  togglePopout(value) {
+    if (typeof value === 'boolean') {
+      this.setState({ popout: value ? <ScreenSpinner /> : null });
+      console.log(this.state.popout, value ? <ScreenSpinner /> : null);
+    } else {
+      this.setState({ popout: !this.state.popout && <ScreenSpinner /> });
+    }
+    console.log(this.state.popout, typeof value);
+  }
 
   render() {
     return (
-      <Panel id={this.props.id}>
+      <Panel id={this.props.id} popout={this.state.popout}>
         <PanelHeader
           left={
             <HeaderButton onClick={this.props.goBack} data-to="back">
@@ -59,8 +93,8 @@ export default class Visiters extends React.Component {
         >
           Профиль
         </PanelHeader>
-        <Group>
-          <FormLayout>
+        <Group popout={this.state.popout}>
+          <FormLayout popout={this.state.popout}>
             <Input
               value={this.state.name}
               onChange={event => this.setState({ name: event.target.value })}

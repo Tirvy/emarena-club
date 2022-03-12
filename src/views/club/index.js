@@ -159,6 +159,7 @@ class Club extends React.Component {
         <PanelVisiterEditing
           id="editing"
           visiter={this.state.currentEditing}
+          visiters={this.props.visiters}
           goBack={() => this.setState({ currentEditing: null })}
         ></PanelVisiterEditing>
       </View>
