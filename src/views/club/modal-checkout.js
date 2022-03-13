@@ -116,7 +116,7 @@ export default class Club extends React.Component {
 
     const cost_array = bonus_source ? COST_CARD : COST_BASIC;
     const addition = 0.25;
-    const cost_value = cost_array.find(item => item.hours > difference + addition);
+    const cost_value = cost_array.find(item => item.hours + addition > difference);
     let sum = cost_value ? cost_value.sum : limit;
 
     if (!sum || sum > limit) {
